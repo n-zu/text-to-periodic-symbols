@@ -36,7 +36,7 @@ function separateElementsWithCommonLetters(elements) {
   return [unique, repetitive];
 }
 
-function replaceUniqueElement(array, element) {
+function replaceElement(array, element) {
   let result = [];
   array.forEach((string) => {
     if (typeof string !== "string") return result.push(string);
@@ -52,10 +52,10 @@ function replaceUniqueElement(array, element) {
   return result;
 }
 
-function replaceUniqueElements(string, unique) {
-  let result = [string];
-  unique.forEach((element) => {
-    result = replaceUniqueElement(result, element);
+function replaceElements(arrayText, elements) {
+  let result = [...arrayText];
+  elements.forEach((element) => {
+    result = replaceElement(result, element);
   });
   return result;
 }
@@ -85,7 +85,7 @@ function replaceRepetitiveElementsPermutation(
   textArray,
   repetitivePermutation
 ) {
-  repetitivePermutation.forEach((element) => {});
+  return replaceElements(textArray, repetitivePermutation);
 }
 
 function replaceRepetitiveElementsPermutations(
@@ -97,24 +97,63 @@ function replaceRepetitiveElementsPermutations(
   );
 }
 
-//--------------------TESTING--------------------
-let test_word = "hello";
-let matching_symbols = filterMatchingSymbols(test_word);
-let [unique, repetitive] = separateElementsWithCommonLetters(matching_symbols);
-let textArray = replaceUniqueElements(test_word, unique);
-let repetitivePermutations = permutations(repetitive);
-let results = replaceRepetitiveElementsPermutations(
-  textArray,
-  repetitivePermutations
-);
+function textArrayToString(textArray) {
+  return textArray
+    .map((component) => {
+      if (typeof component === "string") return component;
+      else return component.symbol;
+    })
+    .join(" ");
+}
 
-console.log("[", test_word, "]");
-/*
-console.log("Unique elements:");
-console.log(unique);
-console.log("Rept elements:");
-console.log(repetitive);
-console.log("Result:");
-console.log(result);
-*/
+function textArraysToResultObjects(textArrays) {
+  return textArrays
+    .map((textArray) => ({
+      result: textArray,
+      text: textArrayToString(textArray),
+      missing: textArray.filter((component) => typeof component === "string")
+        .length,
+    }))
+    .sort((a, b) => a.missing - b.missing);
+}
+
+function removeDuplicatesFromResultObjects(resultObjects) {
+  let results = [];
+  resultObjects.forEach((resultObject) => {
+    if (results.some((result) => result.text === resultObject.text)) return;
+    results.push(resultObject);
+  });
+  return results;
+}
+
+function textToChemicalElements(text) {
+  let lower_text = text.toLowerCase();
+
+  let matching_symbols = filterMatchingSymbols(lower_text);
+  let [unique, repetitive] =
+    separateElementsWithCommonLetters(matching_symbols);
+  let repetitivePermutations = permutations(repetitive);
+
+  let textArray = replaceElements([lower_text], unique);
+  let results = replaceRepetitiveElementsPermutations(
+    textArray,
+    repetitivePermutations
+  );
+  let resultsObjects = textArraysToResultObjects(results);
+  let filteredResultsObjects =
+    removeDuplicatesFromResultObjects(resultsObjects);
+
+  return filteredResultsObjects;
+}
+
+function parseResultsObjects(resultsObjects) {
+  return resultsObjects.map(({ text, missing }) => text + " (" + missing + ")");
+}
+
+//--------------------TESTING--------------------
+let test_word = "corrupcion";
+let results = textToChemicalElements(test_word);
+let parsedResults = parseResultsObjects(results);
+
+console.log(parsedResults);
 console.timeEnd("program");
