@@ -1,17 +1,29 @@
 <script lang="ts">
   import text2pt, {primaryText} from "../scripts/text2pt";
+  import type { PtResults } from "../scripts/types";
   import {throttle} from "../scripts/utils";
+  import PtWordResult from "./PtWordResult.svelte";
 
   export let text : string;
 
-  let output : string = "";
-
-  let setOutput = throttle((str : string) => {
-    output = primaryText(text2pt(str));
+  let results : PtResults[] = [];
+  let setResults = throttle((str : string) => {
+    results = text2pt(str);
   });
 
-
-  $: setOutput(text);
+  $: setResults(text);
 </script>
 
-{output}
+<section>
+  {#each results as wordResults(wordResults)}
+    <PtWordResult {wordResults} />
+  {/each}
+</section>
+
+<style>
+  section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+  }
+</style>
