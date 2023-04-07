@@ -11,8 +11,8 @@
     "outDir": "build",
     "lib": ["es6", "dom", "es2017"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "vite.config.ts", "build/**/*"]
+  "include": ["src/**/*.ts", "src/**/*.svelte"],
+  "exclude": ["node_modules", "vite.config.ts", "build/**/*", "*.js"]
   // Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
   //
   // If you want to overwrite includes/excludes, make sure to copy over the relevant includes/excludes

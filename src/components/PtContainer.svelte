@@ -1,13 +1,17 @@
-<script>
-  import text2pt, {parseResultsObjects} from "../scripts/text2pt";
-  export let text = '';
+<script lang="ts">
+  import text2pt, {primaryText} from "../scripts/text2pt";
+  import {throttle} from "../scripts/utils";
 
-  let output = '';
+  export let text : string;
+
+  let output : string = "";
+
+  let setOutput = throttle((str : string) => {
+    output = primaryText(text2pt(str));
+  });
+
+
+  $: setOutput(text);
 </script>
 
-<button on:click={
-  () => {
-    output = parseResultsObjects(text2pt(text))[0];
-  }
-}>Parse</button>
 {output}
