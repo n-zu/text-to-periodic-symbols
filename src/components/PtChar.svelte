@@ -1,39 +1,53 @@
 <script lang="ts">
   import type { PtElement } from "../scripts/types";
+  import {config} from "../stores/config";
   import getCategoryColor from "../scripts/category2color";
 
   export let char: string | PtElement;
-  export let colored: boolean = false;
 
-  let text: string, subtext: string, className:string;
+  let text: string, suptext: string, subtext: string, category:string;
   if (typeof char === "string") {
     text = char;
     subtext = "-";
-    className = "unknown";
+    category = "none";
+    suptext = "";
   } else {
     text = char.symbol;
     subtext = String(char.atomic_mass.toPrecision(5));
-    className = char.category;
+    category = char.category;
+    suptext = String(char.number);
   }
-  const color = getCategoryColor(className);
-  let style = colored ? `--bg-color: ${color}; --bd-color: #0000` : "--bg-color: #0000; --bd-color: #fff";
+  const color = getCategoryColor(category);
 </script>
 
-<div class={className} style={style}>
+<div class={$config.mode} style:--pt-color={color}>
+  <span>{suptext}</span>
   <h2 >{text}</h2>
   <p  >{subtext}</p>
 </div>
 
 <style>
   div {
+    position: relative;
     box-sizing: border-box;
-    border: 1px solid var(--bd-color);
-    background-color: var(--bg-color);
+    border: 1px solid #0000;
+    
     border-radius: 2px;
     min-width: 100px;
     height: 120px;
     padding: 0 15px 0;
   }
+
+  div.white {
+    border-color: white;
+  }
+  div.color {
+    background-color: var(--pt-color);
+  }
+  div.black p{
+    color: var(--pt-color);
+  }
+
   h2 {
     font-weight: 700;
     font-size: 60px;
@@ -42,5 +56,13 @@
   }
   p {
     font-size: 20px;
+  }
+  span {
+    position: absolute;
+    top: 0;
+    right: 5px;
+    font-family: monospace;
+    font-weight: 700;
+    opacity: 0.5;
   }
 </style>

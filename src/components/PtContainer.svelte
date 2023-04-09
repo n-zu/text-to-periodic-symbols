@@ -1,5 +1,5 @@
 <script lang="ts">
-  import text2pt, {primaryText} from "../scripts/text2pt";
+  import text2pt from "../scripts/text2pt";
   import type { PtResults } from "../scripts/types";
   import {throttle} from "../scripts/utils";
   import PtWordResult from "./PtWordResult.svelte";
@@ -14,7 +14,7 @@
   $: setResults(text);
 </script>
 
-<section>
+<section >
   {#each results as wordResults(wordResults)}
     <PtWordResult {wordResults} />
   {/each}

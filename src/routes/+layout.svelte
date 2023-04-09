@@ -1,8 +1,9 @@
-<nav>
-  <p></p>
-  <h1>TEXT 2 ELEMENTS</h1>
-  <p></p>
-</nav>
+<script>
+  import Navigation from "../components/Navigation.svelte";
+</script>
+
+<Navigation />
+
 <main>
   <slot />
 </main>
